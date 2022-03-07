@@ -6,7 +6,7 @@ import { darkTheme } from "./theme";
 
 ReactDOM.render(
     <React.StrictMode>
-        <ThemeProvider theme = {darkTheme}>
+        <ThemeProvider theme={darkTheme}>
             <App />
         </ThemeProvider>
     </React.StrictMode>,
