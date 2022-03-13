@@ -9,12 +9,19 @@ function ToDo({ text, category, id }: IToDo) {
         } = event;
         setToDos((oldToDos) => {
             const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
-            const newToDo = { text, id, category: name as any };
-            return [
-                ...oldToDos.slice(0, targetIndex),
-                newToDo,
-                ...oldToDos.slice(targetIndex + 1),
-            ];
+            if (name === Categories.DELETE) {
+                return [
+                    ...oldToDos.slice(0, targetIndex),
+                    ...oldToDos.slice(targetIndex + 1),
+                ];
+            } else {
+                const newToDo = { text, id, category: name as any };
+                return [
+                    ...oldToDos.slice(0, targetIndex),
+                    newToDo,
+                    ...oldToDos.slice(targetIndex + 1),
+                ];
+            }
         });
     };
     return (
@@ -35,6 +42,9 @@ function ToDo({ text, category, id }: IToDo) {
                     Done
                 </button>
             )}
+            <button name={Categories.DELETE} onClick={onClick}>
+                Delete
+            </button>
         </li>
     );
 }
