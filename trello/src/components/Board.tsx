@@ -1,7 +1,8 @@
 import { Droppable } from "react-beautiful-dnd";
 import DraggableCard from "./DraggableCard";
 import styled from "styled-components";
-
+import { useForm } from "react-hook-form";
+import { ITodo } from "../atoms";
 const Wrapper = styled.div`
     width: 300px;
     padding: 20px 10px;
@@ -13,7 +14,12 @@ const Wrapper = styled.div`
     flex-direction: column;
     overflow: hidden;
 `;
-
+const Form = styled.form`
+    width: 100%;
+    input {
+        width: 100%;
+    }
+`;
 const Title = styled.h2`
     text-align: center;
     font-weight: 600;
@@ -38,14 +44,27 @@ const Area = styled.div<IAreaProps>`
     padding: 20px;
 `;
 interface IBoardProps {
-    toDos: string[];
+    toDos: ITodo[];
     boardId: string;
 }
-
+interface IForm {
+    toDo: string;
+}
 function Board({ toDos, boardId }: IBoardProps) {
+    const { register, setValue, handleSubmit } = useForm<IForm>();
+    const onValid = ({ toDo }: IForm) => {
+        setValue("toDo", "");
+    };
     return (
         <Wrapper>
             <Title>{boardId}</Title>
+            <Form onSubmit={handleSubmit(onValid)}>
+                <input
+                    {...register("toDo", { required: true })}
+                    type="text"
+                    placeholder={`Add task on ${boardId}`}
+                />
+            </Form>
             <Droppable droppableId={boardId}>
                 {(magic, info) => (
                     <Area
@@ -57,9 +76,10 @@ function Board({ toDos, boardId }: IBoardProps) {
                         {console.log(info)}
                         {toDos.map((toDo, index) => (
                             <DraggableCard
-                                key={toDo}
+                                key={toDo.id}
                                 index={index}
-                                toDo={toDo}
+                                toDoId={toDo.id}
+                                toDoText={toDo.text}
                             />
                         ))}
                         {magic.placeholder}
