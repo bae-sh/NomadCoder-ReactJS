@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import { useRef } from "react";
 const Wrapper = styled.div`
     height: 100vh;
     width: 100vw;
@@ -19,6 +20,11 @@ const Box2 = styled(Box)`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 40px;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
+`;
+const Box3 = styled(Box)`
+    background-color: rgba(255, 255, 255, 1);
     border-radius: 40px;
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
 `;
@@ -55,6 +61,10 @@ const boxVariants = {
         },
     },
 };
+const boxVariants3 = {
+    hover: { rotateZ: 90 },
+    click: { borderRadius: "100px" },
+};
 const circleVariants = {
     start: {
         opacity: 0,
@@ -65,7 +75,17 @@ const circleVariants = {
         y: 0,
     },
 };
+const BiggerBox = styled.div`
+    width: 600px;
+    height: 600px;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
 function App() {
+    const biggerBoxRef = useRef<HTMLDivElement>(null);
     return (
         <Wrapper>
             <Box variants={myVars} initial="start" animate="end" />
@@ -75,6 +95,17 @@ function App() {
                 <Circle variants={circleVariants} />
                 <Circle variants={circleVariants} />
             </Box2>
+            <BiggerBox ref={biggerBoxRef}>
+                <Box3
+                    drag
+                    dragSnapToOrigin
+                    dragElastic={0.5}
+                    dragConstraints={biggerBoxRef}
+                    variants={boxVariants3}
+                    whileHover="hover"
+                    whileTap="click"
+                />
+            </BiggerBox>
         </Wrapper>
     );
 }
