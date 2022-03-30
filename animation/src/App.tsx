@@ -1,111 +1,70 @@
 import styled from "styled-components";
-import { motion } from "framer-motion";
-import { useRef } from "react";
-const Wrapper = styled.div`
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
+const Wrapper = styled(motion.div)`
     height: 100vh;
     width: 100vw;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
+    flex-direction: column;
 `;
 
 const Box = styled(motion.div)`
-    width: 200px;
+    width: 400px;
     height: 200px;
-    background-color: white;
-    border-radius: 15px;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
-`;
-const Box2 = styled(Box)`
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 40px;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
-`;
-const Box3 = styled(Box)`
     background-color: rgba(255, 255, 255, 1);
     border-radius: 40px;
+    position: absolute;
+    top: 100px;
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
-`;
-const myVars = {
-    start: { scale: 0 },
-    end: {
-        scale: 1,
-        rotateZ: 360,
-        transition: { type: "spring", delay: 0.5 },
-    },
-};
-const Circle = styled(motion.div)`
-    background-color: white;
-    height: 70px;
-    width: 70px;
-    place-self: center;
-    border-radius: 35px;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
-`;
-const boxVariants = {
-    start: {
-        opacity: 0,
-        scale: 0.5,
-    },
-    end: {
-        scale: 1,
-        opacity: 1,
-        transition: {
-            type: "spring",
-            duration: 0.5,
-            bounce: 0.5,
-            delayChildren: 0.5,
-            staggerChildren: 0.2,
-        },
-    },
-};
-const boxVariants3 = {
-    hover: { rotateZ: 90 },
-    click: { borderRadius: "100px" },
-};
-const circleVariants = {
-    start: {
-        opacity: 0,
-        y: 10,
-    },
-    end: {
-        opacity: 1,
-        y: 0,
-    },
-};
-const BiggerBox = styled.div`
-    width: 600px;
-    height: 600px;
-    background-color: rgba(255, 255, 255, 0.4);
-    border-radius: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 28px;
 `;
+const box = {
+    invisible: {
+        x: 500,
+        opacity: 0,
+        scale: 0,
+    },
+    visible: {
+        x: 0,
+        opacity: 1,
+        scale: 1,
+        exit: { x: -500, opacity: 0, scale: 0, transition: { duration: 1 } },
+        transition: {
+            duration: 1,
+        },
+    },
+    exit: { x: -500, opacity: 0, scale: 0, transition: { duration: 1 } },
+};
 function App() {
-    const biggerBoxRef = useRef<HTMLDivElement>(null);
+    const [visible, setVisible] = useState(1);
+    const nextPlease = () =>
+        setVisible((prev) => (prev === 10 ? 10 : prev + 1));
+    const prevPlease = () => setVisible((prev) => (prev === 1 ? 1 : prev - 1));
+
     return (
         <Wrapper>
-            <Box variants={myVars} initial="start" animate="end" />
-            <Box2 variants={boxVariants} initial="start" animate="end">
-                <Circle variants={circleVariants} />
-                <Circle variants={circleVariants} />
-                <Circle variants={circleVariants} />
-                <Circle variants={circleVariants} />
-            </Box2>
-            <BiggerBox ref={biggerBoxRef}>
-                <Box3
-                    drag
-                    dragSnapToOrigin
-                    dragElastic={0.5}
-                    dragConstraints={biggerBoxRef}
-                    variants={boxVariants3}
-                    whileHover="hover"
-                    whileTap="click"
-                />
-            </BiggerBox>
+            <AnimatePresence>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) =>
+                    i === visible ? (
+                        <Box
+                            variants={box}
+                            initial="invisible"
+                            animate="visible"
+                            exit="exit"
+                            key={i}
+                        >
+                            {i}
+                        </Box>
+                    ) : null
+                )}
+            </AnimatePresence>
+            <button onClick={nextPlease}>next</button>
+            <button onClick={prevPlease}>prev</button>
         </Wrapper>
     );
 }
