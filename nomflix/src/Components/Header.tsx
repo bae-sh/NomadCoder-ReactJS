@@ -43,6 +43,7 @@ const Item = styled.li`
   position: relative;
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column;
   &:hover {
     color: ${props => props.theme.white.lighter};
@@ -62,9 +63,6 @@ const Circle = styled.span`
   height: 5px;
   border-radius: 5px;
   bottom: -5px;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
   background-color: ${props => props.theme.red};
 `;
 
@@ -83,6 +81,7 @@ const logoVariants = {
 function Header() {
   const homeMatch = useMatch('/');
   const tvMatch = useMatch('/tv');
+  console.log(homeMatch, tvMatch);
   return (
     <Nav>
       <Col>
@@ -99,10 +98,12 @@ function Header() {
         </Logo>
         <Items>
           <Item>
-            <Link to="/">Home {homeMatch && <Circle />}</Link>
+            <Link to="/">Home </Link>
+            {homeMatch && <Circle />}
           </Item>
           <Item>
-            <Link to="/tv">Tv Shows {tvMatch && <Circle />}</Link>
+            <Link to="/tv">Tv Shows </Link>
+            {tvMatch && <Circle />}
           </Item>
         </Items>
       </Col>
